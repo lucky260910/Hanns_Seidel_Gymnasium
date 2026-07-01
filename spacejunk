@@ -1,0 +1,111 @@
+class Raumschiff extends Sprite {
+   // Attribute der Klasse Raumschiff 
+   String name;
+   double vx;
+   double vy;
+   double beschleunigung;
+   int schaden;
+
+   // Konstruktor
+   Raumschiff(String name, int x, int y) {
+      // Konstruktor der Klasse Sprite
+      super(x, y, SpriteLibrary.Space_Shooter_1, 2);
+      this.name = name;
+      beschleunigung = 0.2;
+      vx = 0.3;
+      vy = 0.7;
+   }
+  
+   void akt() {
+      if (collidesWithAnyShape()) {
+         vx = 0;
+         vy = 0;
+         schaden = schaden + 1;
+         println(name + " - Schaden: " + schaden); if (schaden == 5) {
+            System.exit(0);
+         }
+         
+      }
+   }
+
+   /* überschriebene Methode der Klasse Sprite, 
+      wird 30 Mal / Sekunde aufgerufen */
+   void act() {
+      // ist die Pfeiltaste nach links gedrückt?
+      if (isKeyDown(Key.ArrowLeft)) {
+         vx = vx - beschleunigung;
+      }
+      if (isKeyDown(Key.ArrowLeft)) {
+         vx = vx - beschleunigung;
+      }
+      if (isKeyDown(Key.ArrowRight)) {
+         vx = vx + beschleunigung;
+      }
+      if (isKeyDown(Key.ArrowUp)) {
+         vy = vy - beschleunigung;
+      }
+      if (isKeyDown(Key.ArrowDown)) {
+         vy = vy + beschleunigung;
+      }
+      move(vx, vy);
+      if (centerX < 30 || centerX > 770) {
+         move(-vx, 0);
+         vx = 0;
+      } 
+   }
+}
+// Klasse Weltraumschrott, die von der Klasse Circle erbt
+class Weltraumschrott extends Circle {
+   
+   Weltraumschrott(double x, double y, double radius, int color) {
+      super(x, y, radius);
+      setFillColor(color); 
+
+   } 
+   
+   public void act() { 
+      if (collidesWithAnyShape() || centerX < 0) {
+         destroy();
+      }else {
+         move(-3, 0);
+      }
+   
+   }
+}
+// Hilfsklasse für Zufallszahlen
+class Zufall {
+   public static int gibInteger(int min, int max) {
+      return Math.floor(Math.random() * (max + 1 - min) + min);
+   }
+}
+// Deklaration einer Variablen der Klasse Raumschiff
+Raumschiff raumschiff1;
+// Erzeugen eines Raumschiff-Objekts
+raumschiff1 = new Raumschiff("Captain Körk", 100, 50);
+// Begrenzungslinie am oberen Bildschirmrand 
+new Rectangle(0, 0, 800, 5);
+// Trennlinie in der Bildschirmmitte 
+new Rectangle(0, 300, 800, 5);
+// Begrenzungslinie am unteren Bildschirmrand 
+new Rectangle(0, 595, 800, 5); // x=595, damit das 5 Pixel hohe Rechteck noch sichtbar ist
+ // Variable x deklarieren und eine zufällige Zahl zwischen 850 und 900 zuweisen
+int x = Zufall.gibInteger(850, 900);
+   // Variable y deklarieren und eine zufällige Zahl zwischen 20 und 280 zuweisen
+int y = Zufall.gibInteger(20, 280);
+   // Variable farbe deklarieren und eine zufällige Zahl zwichen 0 und 16581375 zuweisen
+int farbe = Zufall.gibInteger(0, 16581375);
+   // ein neues Objekt der Klasse Weltraumschrott mit Radius 10 und den zufälligen Werten erzeugen
+new Weltraumschrott(x, y, 10, farbe);
+   // Variable systemgeschwindigkeit als Ganzzahl deklarieren und mit 200 initialisieren
+int systemgeschwindigkeit = 200;
+// Endlosschleife zum Erzeugen des Weltraummülls
+while(true) {
+   int x = Zufall.gibInteger(850, 900);
+   int y = Zufall.gibInteger(20, 280);
+   int farbe = Zufall.gibInteger(0, 16581375);
+   new Weltraumschrott(x, y, 10, farbe);
+   // Ablaufgeschwindigeit mit SystemTools.setSpeed() setzen
+   SystemTools.setSpeed(systemgeschwindigkeit);
+   // systemgeschwindigkeit um 1 erhöhen
+   systemgeschwindigkeit++;
+}
